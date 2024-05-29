@@ -1,75 +1,89 @@
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
-    margin: 0;
-    padding: 0;
+  font-family: 'Poppins';
+  background-color: #7c6e6e;
+  margin: 0;
+  padding: 0;
 }
 
 .container {
-    width: 80%;
-    margin: 50px auto;
-    padding: 20px;
-    background: #fff;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  width: 60%;
+  margin: 25px auto;
+  padding: 25px;
+  background-color: #554747;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  color: #e9e5e5;
 }
 
-h1, h2 {
-    color: #333;
-    text-align: center;
+h1 {
+  text-align: center;
+  color: #e9e5e5;
+  font: Arial;
+  font-size: 60px;
+  margin-bottom: 0;
 }
 
-p {
-    text-align: center;
-    color: #555;
+P {
+  text-align: center;
+  color: #e9e5e5;
+  font: Arial;
+  font-size: 18px;
+  margin-top: 0;
 }
-
-a {
-    color: #007bff;
-    text-decoration: none;
-    display: block;
-    text-align: center;
-    margin-top: 20px;
-}
-
-a:hover {
-    text-decoration: underline;
+.product-section, .cart-section {
+  margin-bottom: 40px;
+  text-align: center;
+  font: 'Poppins';
+  color: #e9e5e5; 
 }
 
 table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 20px 0;
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+  color: #e9e5e5; 
 }
 
 table, th, td {
-    border: 1px solid #ddd;
+  border: 1px solid #554747;
 }
 
 th, td {
-    padding: 10px;
-    text-align: center;
+  padding: 10px;
+  text-align: left;
 }
 
 th {
-    background-color: #f2f2f2;
+  background-color: #7c6e6e;
 }
 
-input[type="number"], input[type="text"], select {
-    width: calc(100% - 22px);
-    padding: 10px;
-    margin: 10px 0;
-    box-sizing: border-box;
+form {
+  margin: 10px;
 }
 
-button {
-    padding: 10px 20px;
-    background-color: #28a745;
-    color: white;
-    border: none;
-    border-radius: 3px;
-    cursor: pointer;
+input[type="number"] {
+  width: 50px;
 }
 
-button:hover {
-    background-color: #218838;
+button, input[type="submit"] {
+  background-color: #7c6e6e;
+  color: white;
+  padding: 10px 20px;
+  margin: 10px 0;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+button:hover, input[type="submit"]:hover {
+  background-color: #393131;
+}
+
+label {
+  display: block;
+  margin-top: 10px;
 }
