@@ -1,5 +1,6 @@
 <?php
 session_start();
+
 class Product {
     public $id;
     public $name;
@@ -12,10 +13,50 @@ class Product {
     }
 }
 
+class ShoppingCart {
+    public $products;
+
+    public function __construct($products) {
+        $this->products = $products;
+    }
+
+    public function addToCart($productId, $quantity) {
+        if (!empty($productId) && !empty($quantity)) {
+            if (!isset($_SESSION['cart'])) {
+                $_SESSION['cart'] = array();
+            }
+
+            if (array_key_exists($productId, $_SESSION['cart'])) {
+                $_SESSION['cart'][$productId]['quantity'] += $quantity;
+            } else {
+                $product = $this->products[$productId - 1];
+                $_SESSION['cart'][$productId] = array(
+                    'id' => $productId,
+                    'name' => $product->name,
+                    'price' => $product->price,
+                    'quantity' => $quantity
+                );
+            }
+        }
+    }
+
+    public function removeFromCart($productId, $quantity) {
+        if (!empty($productId) && !empty($quantity)) {
+            if (isset($_SESSION['cart']) && array_key_exists($productId, $_SESSION['cart'])) {
+                $_SESSION['cart'][$productId]['quantity'] -= $quantity;
+
+                if ($_SESSION['cart'][$productId]['quantity'] <= 0) {
+                    unset($_SESSION['cart'][$productId]);
+                }
+            }
+        }
+    }
+}
+
 $products = array(
     new Product(1, "Piring kaca", 12000),
     new Product(2, "Piring plastik", 5000),
-    new Product(3, "Mangkok kaca", 10000),
+     new Product(3, "Mangkok kaca", 10000),
     new Product(4, "Mangkok plastik", 4000),
     new Product(5, "1 set alat makan", 35000),
     new Product(6, "Sendok makan", 5000),
@@ -36,41 +77,14 @@ $products = array(
     new Product(21, "Jepit jemuran", 9000)
 );
 
-if (isset($_POST['add'])) {
-  $productId = $_POST['product_id'];
-  $quantity = $_POST['quantity'];
+$cart = new ShoppingCart($products);
 
-  if (!empty($productId) && !empty($quantity)) {
-    if (!isset($_SESSION['cart'])) {
-      $_SESSION['cart'] = array();
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (isset($_POST['add'])) {
+        $cart->addToCart($_POST['product_id'], $_POST['quantity']);
+    } elseif (isset($_POST['less'])) {
+        $cart->removeFromCart($_POST['product_id'], $_POST['quantity']);
     }
-
-    if (array_key_exists($productId, $_SESSION['cart'])) {
-      $_SESSION['cart'][$productId]['quantity'] += $quantity;
-    } else {
-      $_SESSION['cart'][$productId] = array(
-        'id' => $productId,
-        'name' => $products[$productId - 1]->name,
-        'price' => $products[$productId - 1]->price,
-        'quantity' => $quantity
-      );
-    }
-  }
-}
-
-if (isset($_POST['less'])) {
-  $productId = $_POST['product_id'];
-  $quantity = $_POST['quantity'];
-
-  if (!empty($productId) && !empty($quantity)) {
-    if (isset($_SESSION['cart']) && array_key_exists($productId, $_SESSION['cart'])) {
-      $_SESSION['cart'][$productId]['quantity'] -= $quantity;
-
-      if ($_SESSION['cart'][$productId]['quantity'] <= 0) {
-        unset($_SESSION['cart'][$productId]);
-      }
-    }
-  }
 }
 
 $cartExists = isset($_SESSION['cart']) && count($_SESSION['cart']) > 0;
@@ -104,16 +118,14 @@ $cartExists = isset($_SESSION['cart']) && count($_SESSION['cart']) > 0;
             <td><?php echo htmlspecialchars($product->name); ?></td>
             <td>Rp<?php echo number_format($product->price, 0, ',', '.'); ?></td>
             <td>
-            <?php
-            echo '<form method="post" action="">';
-            echo '<input type="hidden" name="product_id" value="' . htmlspecialchars($product->id) . '">';
-            echo '<input type="number" name="quantity" min="1" value="1">';
-            echo '</td>';
-            echo '<td>';
-            echo '<input type="submit" name="add" value="+">';
-            echo '<input type="submit" name="less" value="-">';
-            echo '</form>';
-            ?>
+            <form method="post" action="">
+              <input type="hidden" name="product_id" value="<?php echo htmlspecialchars($product->id); ?>">
+              <input type="number" name="quantity" min="1" value="1">
+            </td>
+            <td>
+              <input type="submit" name="add" value="+">
+              <input type="submit" name="less" value="-">
+            </form>
             </td>
           </tr>
         <?php endforeach; ?>
