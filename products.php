@@ -1,28 +1,39 @@
 <?php
 session_start();
+class Product {
+    public $id;
+    public $name;
+    public $price;
+
+    public function __construct($id, $name, $price) {
+        $this->id = $id;
+        $this->name = $name;
+        $this->price = $price;
+    }
+}
 
 $products = array(
-  array("id" => 1, "name" => "Piring kaca", "price" => 12000),
-  array("id" => 2, "name" => "Piring plastik", "price" => 5000),
-  array("id" => 3, "name" => "Mangkok kaca", "price" => 10000),
-  array("id" => 4, "name" => "Mangkok plastik", "price" => 4000),
-  array("id" => 5, "name" => "1 set alat makan", "price" => 35000),
-  array("id" => 6, "name" => "Sendok makan", "price" => 5000),
-  array("id" => 7, "name" => "Garpu makan", "price" => 5000),
-  array("id" => 8, "name" => "Gelas kaca", "price" => 12000),
-  array("id" => 9, "name" => "Gelas plastik", "price" => 4000),
-  array("id" => 10, "name" => "Tutup gelas", "price" => 5000),
-  array("id" => 11, "name" => "Sapu lidi", "price" => 8000),
-  array("id" => 12, "name" => "Sapu ijuk", "price" => 20000),
-  array("id" => 13, "name" => "Pel lantai", "price" => 25000),
-  array("id" => 14, "name" => "Ember", "price" => 27000),
-  array("id" => 15, "name" => "Tempat sampah", "price" => 32000),
-  array("id" => 16, "name" => "Payung", "price" => 40000),
-  array("id" => 17, "name" => "Jas hujan", "price" => 70000),
-  array("id" => 18, "name" => "Jam dinding", "price" => 30000),
-  array("id" => 19, "name" => "Jam weker", "price" => 38000),
-  array("id" => 20, "name" => "Hanger (5pcs)", "price" => 15000),
-  array("id" => 21, "name" => "Jepit jemuran", "price" => 9000),
+    new Product(1, "Piring kaca", 12000),
+    new Product(2, "Piring plastik", 5000),
+    new Product(3, "Mangkok kaca", 10000),
+    new Product(4, "Mangkok plastik", 4000),
+    new Product(5, "1 set alat makan", 35000),
+    new Product(6, "Sendok makan", 5000),
+    new Product(7, "Garpu makan", 5000),
+    new Product(8, "Gelas kaca", 12000),
+    new Product(9, "Gelas plastik", 4000),
+    new Product(10, "Tutup gelas", 5000),
+    new Product(11, "Sapu lidi", 8000),
+    new Product(12, "Sapu ijuk", 20000),
+    new Product(13, "Pel lantai", 25000),
+    new Product(14, "Ember", 27000),
+    new Product(15, "Tempat sampah", 32000),
+    new Product(16, "Payung", 40000),
+    new Product(17, "Jas hujan", 70000),
+    new Product(18, "Jam dinding", 30000),
+    new Product(19, "Jam weker", 38000),
+    new Product(20, "Hanger (5pcs)", 15000),
+    new Product(21, "Jepit jemuran", 9000)
 );
 
 if (isset($_POST['add'])) {
@@ -39,8 +50,8 @@ if (isset($_POST['add'])) {
     } else {
       $_SESSION['cart'][$productId] = array(
         'id' => $productId,
-        'name' => $products[$productId - 1]['name'],
-        'price' => $products[$productId - 1]['price'],
+        'name' => $products[$productId - 1]->name,
+        'price' => $products[$productId - 1]->price,
         'quantity' => $quantity
       );
     }
@@ -90,17 +101,19 @@ $cartExists = isset($_SESSION['cart']) && count($_SESSION['cart']) > 0;
         </tr>
         <?php foreach ($products as $product): ?>
           <tr>
-            <td><?php echo htmlspecialchars($product['name']); ?></td>
-            <td>Rp<?php echo number_format($product['price'], 0, ',', '.'); ?></td>
+            <td><?php echo htmlspecialchars($product->name); ?></td>
+            <td>Rp<?php echo number_format($product->price, 0, ',', '.'); ?></td>
             <td>
-              <form method="post" action="">
-                <input type="hidden" name="product_id" value="<?php echo $product['id']; ?>">
-                <input type="number" name="quantity" min="1" value="1">
-            </td>
-            <td>
-                <input type="submit" name="add" value="+">
-                <input type="submit" name="less" value="-">
-              </form>
+            <?php
+            echo '<form method="post" action="">';
+            echo '<input type="hidden" name="product_id" value="' . htmlspecialchars($product->id) . '">';
+            echo '<input type="number" name="quantity" min="1" value="1">';
+            echo '</td>';
+            echo '<td>';
+            echo '<input type="submit" name="add" value="+">';
+            echo '<input type="submit" name="less" value="-">';
+            echo '</form>';
+            ?>
             </td>
           </tr>
         <?php endforeach; ?>
@@ -134,15 +147,12 @@ $cartExists = isset($_SESSION['cart']) && count($_SESSION['cart']) > 0;
             <td>Rp<?php echo number_format($total, 0, ',', '.'); ?></td>
           </tr>
         </table>
-
         <form method="post" action="payment.php">
           <label for="payment_method">Metode Pembayaran:</label>
           <select id="payment_method" name="payment_method" required>
             <option value="Cash">Cash</option>
           </select><br>
-
           <input type="hidden" name="total" value="<?php echo $total; ?>">
-
           <button type="submit">Bayar Sekarang</button>
         </form>
       <?php else: ?>

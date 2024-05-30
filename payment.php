@@ -35,8 +35,9 @@ foreach ($itemsInCart as $item) {
       <li>Total: Rp<?php echo number_format($total, 0, ',', '.'); ?></li>
     </ul>
     <p>Terima kasih atas pesanan Anda!</p>
-
-    <p><a href="index.php">Kembali ke Toko</a></p>
+    <?php
+    echo '<p><a href="index.php">Kembali ke Toko</a></p>';
+    ?>
   </div>
 
   <?php
